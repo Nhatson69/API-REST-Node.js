@@ -17,6 +17,7 @@ app.post("/register", users.RegisterUser);
 app.get("/login", users.Login);
 app.get("/user", users.User);
 app.patch("/user", users.UserModif)
+app.delete("/disconnect", users.Logout)
 
 // Démarrer le serveur
 app.listen(port, () => {

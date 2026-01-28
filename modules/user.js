@@ -15,7 +15,7 @@ function RegisterUser(req, res) {
     let data = fs.readFileSync('./data/users.json', 'utf8');
     allUser = JSON.parse(data);
     verif = allUser.find((user) => user.username == username)
-    if (verif){
+    if (verif) {
         res.json({ "message": "L'utilisateur existe déjà" })
         return
     }
@@ -46,7 +46,7 @@ function Login(req, res) {
     allUser = JSON.parse(data);
     user = allUser.find((user) => user.username == username && user.password == password)
     verif = allUser.find((user) => user.username == username)
-    if (!verif){
+    if (!verif) {
         res.json({ "message": "L'utilisateur n'existe déjà" })
         return
     }
@@ -75,7 +75,7 @@ function User(req, res) {
     allUser = JSON.parse(data);
     user = allUser.find((user) => user.token == token)
     verif = allUser.find((user) => user.token == token)
-    if (!verif){
+    if (!verif) {
         res.json({ "message": "Le token n'existe déjà" })
         return
     }
@@ -104,5 +104,18 @@ function UserModif(req, res) {
     res.json({ "message": "L'username a été modifier" });
 }
 
+function Logout(req, res) {
+    if (!req.query) {
+        res.status(400).json({ "message": "Erreur : Aucune données" });
+    }
+    let token = req.query.token;
+    let data = fs.readFileSync('./data/users.json', 'utf8');
+    allUser = JSON.parse(data);
+    user = allUser.find((user) => user.token == token);
+    user.token = "";
+    fs.writeFileSync("./data/users.json", JSON.stringify(allUser), 'utf8');
+    res.json({"message" : "sa marceh"})
+}
 
-module.exports = { RegisterUser, Login, User, UserModif };
+
+module.exports = { RegisterUser, Login, User, UserModif, Logout };
