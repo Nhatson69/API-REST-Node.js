@@ -14,6 +14,8 @@ app.get("/", (req, res) => {
 });
 
 app.post("/register", users.RegisterUser);
+app.get("/login", users.Login);
+app.get("/user", users.User);
 
 // Démarrer le serveur
 app.listen(port, () => {
