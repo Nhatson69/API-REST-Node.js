@@ -1,14 +1,28 @@
-const express = require('express');
-const router = express.Router();
+const fs = require('fs');
 
-// Données simulées
-let users = [
-  const express = require('express');
-const router = express.Router();
+function RegisterUser(req, res) {
+    if (!req.body) {
+        res.status(400).json({ "message": "Erreur : Aucune données" })
+    }
 
-// Données simulées
-let users = [
-  { id: 1, name: 'Alice' },
-  { id: 2, name: 'Bob' }
-];
-];
+    let username = req.body.username;
+    let password = req.body.password;
+    let collection = req.body.collection;
+    let data = fs.readFileSync('./data/users.json', 'utf8');
+    allUser = JSON.parse(data);
+    let user = {
+        "id": (allUser.length + 1),
+        "username": username,
+        "password": password,
+        "collection": []
+    }
+
+    allUser.push(user)
+    fs.writeFileSync("./data/users.json", JSON.stringify(allUser), 'utf8')
+    res.json({ "message": "OK" });
+
+}
+
+
+
+module.exports = { RegisterUser };
