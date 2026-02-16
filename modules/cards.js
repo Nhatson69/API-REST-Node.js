@@ -51,6 +51,33 @@ function OpenBooster(req, res) {
     let booster = []
     // on a récupérer tous les cartes ici
     for (let i = 0; i < 5; i++) {
+        // a chaque boucle on doit avoir une carte avec un rareté 
+        //  common = 80%, rare = 15%, legendary = 5%
+        // essaie avec common = 70%, rare = 20% et legendary = 10%
+        let C = "common"
+        let R = "rare"
+        let L = "legendary"
+        let chance = [C, C, C, C, C, C, C, R, R, L]
+        const randomChance = Math.floor(Math.random() * chance.length);
+        console.log(randomChance)
+        if (chance[randomChance] == "common") {
+            // si la carte est de rare commun alors on va chercher toutes les cartes communes dans cardsData
+            console.log("on a obtene une carte commune")
+            cardCommon = []
+            // recupère les objects où rareté est common
+            cardCommon.push(cardsData.r)
+
+            // générer la carte de façon aléatoire
+            const randomIndex = Math.floor(Math.random() * cardCommon.length);
+            booster.push(cardsData[randomIndex]);
+        }
+        else if (chance[randomChance] == "rare") {
+            console.log("on a obtene une carte rare")
+        }
+        else if (chance[randomChance] == "legendary") {
+            console.log("on a obtene une carte légendaire")
+        }
+
         // générer la carte de façon aléatoire
         const randomIndex = Math.floor(Math.random() * cardsData.length);
         booster.push(cardsData[randomIndex]);
