@@ -57,35 +57,97 @@ function OpenBooster(req, res) {
         let C = "common"
         let R = "rare"
         let L = "legendary"
+        let nb = 1
         let chance = [C, C, C, C, C, C, C, R, R, L]
         const randomChance = Math.floor(Math.random() * chance.length);
-        console.log(randomChance)
-        if (chance[randomChance] == "common") {
+        let rarete = chance[randomChance]
+        if (rarete == "common") {
             // si la carte est de rare commun alors on va chercher toutes les cartes communes dans cardsData
-            console.log("on a obtene une carte commune")
-            cardCommon = []
-            // recupère les objects où rareté est common
-            cardCommon.push(cardsData.r)
-
+            // fonction vu avec l'ia mais dans l'idée on parcourt le cardsData où l'on cherche les "objets" avec pour rarity common
+            cardCommon = cardsData.filter(card => card.rarity === rarete)
             // générer la carte de façon aléatoire
             const randomIndex = Math.floor(Math.random() * cardCommon.length);
-            booster.push(cardsData[randomIndex]);
+            // incrementation si cards déjà dans la collection
+            /* for (let j = 0; j < user.collection.length; j++) {
+                 // console.log(cardCommon[randomIndex].id)
+                 if (user.collection.flat().map(card => card.id) == cardCommon[randomIndex].id) {
+                     console.log("on a un doublon")
+                     nb = nb + 1
+                 }
+             }*/
+            const doublon = user.collection.find(c => c.id == cardCommon[randomIndex].id)
+            if (doublon) {
+                // si le doublon existe on cherche l'index du doublon
+                const index = user.collection.findIndex(c => c.id == cardCommon[randomIndex].id)
+                user.collection[index].nb = (user.collection[index].nb || 1) + 1;
+                // içi on incrémente le nombre de carte
+                // doublon.nb = (doublon.nb || 1) + 1
+                cards = { id: cardCommon[randomIndex].id, nb: user.collection[index].nb }
+                booster.push(cards);
+                // user.collection.push(cards)
+                // le but est de modifier le "doublon" dans la collection au lieux de l'ajouter
+            } else {
+                cards = { id: cardCommon[randomIndex].id, nb: nb } // un dictionaire qui contiendra l'id et le nombre de doublon
+                booster.push(cards);
+                user.collection.push(cards)
+            }
+            console.log("on a obtene une carte commune")
         }
-        else if (chance[randomChance] == "rare") {
+        else if (rarete == "rare") {
+            // si la carte est de rare commun alors on va chercher toutes les cartes communes dans cardsData
+            // fonction vu avec l'ia mais dans l'idée on parcourt le cardsData où l'on cherche les "objets" avec pour rarity common
+            cardRare = cardsData.filter(card => card.rarity === rarete)
+            // générer la carte de façon aléatoire
+            const randomIndex = Math.floor(Math.random() * cardRare.length);
+            const doublon = user.collection.find(c => c.id == cardRare[randomIndex].id)
+            if (doublon) {
+                // si le doublon existe on cherche l'index du doublon
+                const index = user.collection.findIndex(c => c.id == cardRare[randomIndex].id)
+                user.collection[index].nb = (user.collection[index].nb || 1) + 1;
+                // içi on incrémente le nombre de carte
+                // doublon.nb = (doublon.nb || 1) + 1
+                cards = { id: cardRare[randomIndex].id, nb: user.collection[index].nb }
+                booster.push(cards);
+            } else {
+                cards = { id: cardRare[randomIndex].id, nb: nb } // un dictionaire qui contiendra l'id et le nombre de doublon
+                booster.push(cards);
+                user.collection.push(cards)
+            }
             console.log("on a obtene une carte rare")
         }
         else if (chance[randomChance] == "legendary") {
+            // si la carte est de rare commun alors on va chercher toutes les cartes communes dans cardsData
+            // fonction vu avec l'ia mais dans l'idée on parcourt le cardsData où l'on cherche les "objets" avec pour rarity common
+            cardLegendary = cardsData.filter(card => card.rarity === rarete)
+            // générer la carte de façon aléatoire
+            const randomIndex = Math.floor(Math.random() * cardLegendary.length);
+            const doublon = user.collection.find(c => c.id == cardLegendary[randomIndex].id)
+            if (doublon) {
+                // si le doublon existe on cherche l'index du doublon
+                const index = user.collection.findIndex(c => c.id == cardLegendary[randomIndex].id)
+                user.collection[index].nb = (user.collection[index].nb || 1) + 1;
+                // içi on incrémente le nombre de carte
+                // doublon.nb = (doublon.nb || 1) + 1
+                cards = { id: cardRare[randomIndex].id, nb: user.collection[index].nb }
+                booster.push(cards);
+            }
+            else {
+                cards = { id: cardLegendary[randomIndex].id, nb: nb }
+                booster.push(cards);
+                user.collection.push(cards)
+            }
+
             console.log("on a obtene une carte légendaire")
         }
 
-        // générer la carte de façon aléatoire
-        const randomIndex = Math.floor(Math.random() * cardsData.length);
-        booster.push(cardsData[randomIndex]);
+        // // générer la carte de façon aléatoire
+        // const randomIndex = Math.floor(Math.random() * cardsData.length);
+        // booster.push(cardsData[randomIndex]);
     };
 
-    user.collection = user.collection || [];
-    console.log(user.lastBooster)
-    user.collection.push(booster)
+    // user.collection = user.collection || [];
+    // console.log(user.lastBooster)
+    // user.collection.push(booster)
 
     // écriture dans le fichier users.json pour "sauvegarder" ses changements
     fs.writeFileSync("./data/users.json", JSON.stringify(allUser), 'utf8')

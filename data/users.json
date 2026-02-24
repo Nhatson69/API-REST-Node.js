@@ -10,143 +10,28 @@
         "username": "OLEN",
         "password": "olen",
         "collection": [
-            [
-                {
-                    "id": 4,
-                    "name": "Salamèche",
-                    "rarity": "common"
-                },
-                {
-                    "id": 4,
-                    "name": "Salamèche",
-                    "rarity": "common"
-                },
-                {
-                    "id": 7,
-                    "name": "Carapuce",
-                    "rarity": "common"
-                },
-                {
-                    "id": 4,
-                    "name": "Salamèche",
-                    "rarity": "common"
-                },
-                {
-                    "id": 150,
-                    "name": "Mewtwo",
-                    "rarity": "legendary"
-                }
-            ],
-            [
-                {
-                    "id": 4,
-                    "name": "Salamèche",
-                    "rarity": "common"
-                },
-                {
-                    "id": 7,
-                    "name": "Carapuce",
-                    "rarity": "common"
-                },
-                {
-                    "id": 150,
-                    "name": "Mewtwo",
-                    "rarity": "legendary"
-                },
-                {
-                    "id": 1,
-                    "name": "Bulbizarre",
-                    "rarity": "common"
-                },
-                {
-                    "id": 1,
-                    "name": "Bulbizarre",
-                    "rarity": "common"
-                }
-            ],
-            [
-                {
-                    "id": 25,
-                    "name": "Pikachu",
-                    "rarity": "rare"
-                },
-                {
-                    "id": 1,
-                    "name": "Bulbizarre",
-                    "rarity": "common"
-                },
-                {
-                    "id": 4,
-                    "name": "Salamèche",
-                    "rarity": "common"
-                },
-                {
-                    "id": 1,
-                    "name": "Bulbizarre",
-                    "rarity": "common"
-                },
-                {
-                    "id": 7,
-                    "name": "Carapuce",
-                    "rarity": "common"
-                }
-            ],
-            [
-                {
-                    "id": 25,
-                    "name": "Pikachu",
-                    "rarity": "rare"
-                },
-                {
-                    "id": 25,
-                    "name": "Pikachu",
-                    "rarity": "rare"
-                },
-                {
-                    "id": 4,
-                    "name": "Salamèche",
-                    "rarity": "common"
-                },
-                {
-                    "id": 7,
-                    "name": "Carapuce",
-                    "rarity": "common"
-                },
-                {
-                    "id": 150,
-                    "name": "Mewtwo",
-                    "rarity": "legendary"
-                }
-            ],
-            [
-                {
-                    "id": 1,
-                    "name": "Bulbizarre",
-                    "rarity": "common"
-                },
-                {
-                    "id": 4,
-                    "name": "Salamèche",
-                    "rarity": "common"
-                },
-                {
-                    "id": 25,
-                    "name": "Pikachu",
-                    "rarity": "rare"
-                },
-                {
-                    "id": 4,
-                    "name": "Salamèche",
-                    "rarity": "common"
-                },
-                {
-                    "id": 25,
-                    "name": "Pikachu",
-                    "rarity": "rare"
-                }
-            ]
+            {
+                "id": 7,
+                "nb": 5
+            },
+            {
+                "id": 150,
+                "nb": 1
+            },
+            {
+                "id": 4,
+                "nb": 1
+            },
+            {
+                "id": 25,
+                "nb": 2
+            },
+            {
+                "id": 1,
+                "nb": 1
+            }
         ],
         "token": "e62a3a5f-6a41-402c-8178-44fc2c322585",
-        "lastBooster": 1771260078698
+        "lastBooster": 1771351203744
     }
 ]
