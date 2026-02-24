@@ -128,7 +128,7 @@ function OpenBooster(req, res) {
                 user.collection[index].nb = (user.collection[index].nb || 1) + 1;
                 // içi on incrémente le nombre de carte
                 // doublon.nb = (doublon.nb || 1) + 1
-                cards = { id: cardRare[randomIndex].id, nb: user.collection[index].nb }
+                cards = { id: cardLegendary[randomIndex].id, nb: user.collection[index].nb }
                 booster.push(cards);
             }
             else {
@@ -136,19 +136,9 @@ function OpenBooster(req, res) {
                 booster.push(cards);
                 user.collection.push(cards)
             }
-
             console.log("on a obtene une carte légendaire")
         }
-
-        // // générer la carte de façon aléatoire
-        // const randomIndex = Math.floor(Math.random() * cardsData.length);
-        // booster.push(cardsData[randomIndex]);
     };
-
-    // user.collection = user.collection || [];
-    // console.log(user.lastBooster)
-    // user.collection.push(booster)
-
     // écriture dans le fichier users.json pour "sauvegarder" ses changements
     fs.writeFileSync("./data/users.json", JSON.stringify(allUser), 'utf8')
     // renvoyer la réponse
@@ -160,4 +150,64 @@ function OpenBooster(req, res) {
     })
 }
 
-module.exports = { GetAllCard, OpenBooster };
+function Convert(req, res) {
+    if (!req.query) {
+        res.status(400).json({ "message": "Erreur : Aucune données" })
+    }
+    // vérification de l'existance du token dans la requête
+    if (!req.body.token) {
+        res.json({ "message": "le token n'est pas vérifier" })
+        return
+    }
+    if (!req.body.id) {
+        res.json({ "message": "la carte n'est pas dans la collection" })
+        return
+    }
+    // étape 1 récupérer l'utilisateur
+    let data = fs.readFileSync('./data/users.json', 'utf8');
+    allUser = JSON.parse(data);
+    user = allUser.find((user) => user.token == req.body.token)
+    idDoublon = parseInt(req.body.id)
+    if (!user.currency) {
+        currency = 0
+    }
+    else {
+
+        let allCard = fs.readFileSync('./data/cards.json', 'utf8');
+        let cardsData = JSON.parse(allCard)
+
+        card = cardsData.find((c) => c.id == idDoublon)
+        console.log(card)
+        // vérifier si la carte est en plusieurs exemplaire
+        const doublon = user.collection.find(c => c.id == card.id)
+        if (!(doublon.nb > 1)) {
+            res.json({ "message": "la carte n'est quand un seul exemplaire" })
+        }
+        else {
+            currency = user.currency
+            while (doublon.nb > 1) {
+                doublon.nb = doublon.nb - 1
+                // on compare la rarity de la carte (pas du doublon dans la collection)
+                if (card.rarity == "common") {
+                    currency = currency + 1
+                }
+                if (card.rarity == "rare") {
+                    currency = currency + 3
+                }
+                if (card.rarity == "legendary") {
+                    currency = currency + 10
+                }
+            }
+            user.currency = currency
+            fs.writeFileSync("./data/users.json", JSON.stringify(allUser), 'utf8')
+        }
+        res.json({
+            "message": "transaction réussie",
+            data: {
+                currency: user.currency
+            }
+        });
+    }
+}
+
+    module.exports = { GetAllCard, OpenBooster, Convert };

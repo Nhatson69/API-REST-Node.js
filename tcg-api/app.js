@@ -41,10 +41,11 @@ app.get("/", (req, res) => {
 app.post("/register", users.RegisterUser);
 app.get("/login", users.Login);
 app.get("/user", users.User);
-app.patch("/user", users.UserModif)
-app.delete("/disconnect", users.Logout)
-app.get("/card", cards.GetAllCard)
-app.put("/booster", cards.OpenBooster)
+app.patch("/user", users.UserModif);
+app.delete("/disconnect", users.Logout);
+app.get("/card", cards.GetAllCard);
+app.put("/booster", cards.OpenBooster);
+app.post("/convert", cards.Convert);
 
 // Démarrer le serveur
 app.listen(port, () => {
