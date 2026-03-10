@@ -1,6 +1,29 @@
+var UserBDD = require("../Models/user")
+
 const fs = require('fs');
 
-function RegisterUser(req, res) {
+async function test(req, res) {
+
+    let newUser = new UserBDD();
+
+    newUser.username = 'Simon';
+    newUser.password = "Simon",
+        newUser.collection = [];
+    newUser.token = '';
+    newUser.lastBooster = 0;
+    newUser.currency = 0;
+    await newUser.save();
+    // Exemple de sélection
+    // let users = await User.find({});    
+    // console.log(users)
+
+    let user = await UserBDD.find({})
+    console.log(user);
+    res.json({ "message": "sa marche" });
+}
+
+
+async function RegisterUser(req, res) {
     if (!req.body) {
         res.status(400).json({ "message": "Erreur : Aucune données" })
         return
@@ -9,30 +32,25 @@ function RegisterUser(req, res) {
         res.json({ "message": "Il manque des données" })
         return
     }
-
     let username = req.body.username;
     let password = req.body.password;
-    let data = fs.readFileSync('./data/users.json', 'utf8');
-    allUser = JSON.parse(data);
-    verif = allUser.find((user) => user.username == username)
+    verif = await UserBDD.findOne({ username: username },).exec();
+    // let data = fs.readFileSync('./data/users.json', 'utf8');
+    // allUser = JSON.parse(data);
+    // verif = allUser.find((user) => user.username == username)
     if (verif) {
         res.json({ "message": "L'utilisateur existe déjà" })
         return
     }
-    let user = {
-        "id": (allUser.length + 1),
-        "username": username,
-        "password": password,
-        "collection": []
-    }
-
-    allUser.push(user)
-    fs.writeFileSync("./data/users.json", JSON.stringify(allUser), 'utf8')
+    let newUser = new UserBDD();
+    newUser.username = username;
+    newUser.password = password,
+        await newUser.save();
     res.json({ "message": "OK" });
 
 }
 
-function Login(req, res) {
+async function Login(req, res) {
     if (!req.query) {
         res.status(400).json({ "message": "Erreur : Aucune données" })
     }
@@ -42,80 +60,80 @@ function Login(req, res) {
     }
     let username = req.query.username;
     let password = req.query.password;
-    let data = fs.readFileSync('./data/users.json', 'utf8');
-    allUser = JSON.parse(data);
-    user = allUser.find((user) => user.username == username && user.password == password)
-    verif = allUser.find((user) => user.username == username)
-    if (!verif) {
+    // let data = fs.readFileSync('./data/users.json', 'utf8');
+    // allUser = JSON.parse(data);
+    // user = allUser.find((user) => user.username == username && user.password == password)
+    // nom = await UserBDD.findOne({username: username})
+    // verif = allUser.find((user) => user.username == username)
+    userLog = await UserBDD.findOne({ username: username, password: password }).exec();
+    if (!userLog) {
         res.json({ "message": "L'utilisateur n'existe déjà" })
         return
     }
     // si c est vrai cela veut dire que l'utilisateur existe
-    if (user) {
-        // generer un token (utiliser sauvegarde par référence)
-        user.token = crypto.randomUUID(); // fait par Jules c'est un UUID demander a Jules si question
-        //stocker le token dans l'utilisateur authentifier
-        fs.writeFileSync("./data/users.json", JSON.stringify(allUser), 'utf8')
-        // renvoyer la réponse
-        res.json({
-            "message": "Authentification réussie",
-            data: {
-                token: user.token
-            }
-        });
-    }
+    // generer un token (utiliser sauvegarde par référence)
+    userLog.token = crypto.randomUUID(); // fait par Jules c'est un UUID demander a Jules si question
+    //stocker le token dans l'utilisateur authentifier
+    await userLog.save();
+    // renvoyer la réponse
+    res.json({
+        "message": "Authentification réussie",
+        data: {
+            token: userLog.token
+        }
+    });
 }
 
-function User(req, res) {
+
+async function User(req, res) {
     if (!req.query) {
         res.status(400).json({ "message": "Erreur : Aucune données" })
     }
     let token = req.query.token;
-    let data = fs.readFileSync('./data/users.json', 'utf8');
-    allUser = JSON.parse(data);
-    user = allUser.find((user) => user.token == token)
-    verif = allUser.find((user) => user.token == token)
-    if (!verif) {
+    // let data = fs.readFileSync('./data/users.json', 'utf8');
+    // allUser = JSON.parse(data);
+    // user = allUser.find((user) => user.token == token)
+    // verif = allUser.find((user) => user.token == token)
+    userToken = await UserBDD.findOne({ token: token }).exec();
+    if (!userToken) {
         res.json({ "message": "Le token n'existe déjà" })
         return
-    }
-    if (user) {
-        res.json({
-            "id": (allUser.length + 1),
-            "username": user.username,
-            "password": user.password,
-            "token": user.token,
-            "collection": [],
-        });
-    }
+    } res.json({
+        userToken
+    });
 }
 
-function UserModif(req, res) {
+
+async function UserModif(req, res) {
     if (!req.query) {
         res.status(400).json({ "message": "Erreur : Aucune données" })
     }
-    let username = req.body.username;
+    // dans Param sur postman 
     let token = req.query.token;
-    let data = fs.readFileSync('./data/users.json', 'utf8');
-    allUser = JSON.parse(data);
-    user = allUser.find((user) => user.token == token);
-    user.username = username;
-    fs.writeFileSync("./data/users.json", JSON.stringify(allUser), 'utf8');
+    // dans Body sur postman
+    let username = req.body.username;
+    userName = await UserBDD.findOne({ token: token }).exec();
+    userName.username = username;
+    await userName.save();
     res.json({ "message": "L'username a été modifier" });
 }
 
-function Logout(req, res) {
+async function Logout(req, res) {
     if (!req.query) {
         res.status(400).json({ "message": "Erreur : Aucune données" });
     }
+    // dans Param sur postman
     let token = req.query.token;
-    let data = fs.readFileSync('./data/users.json', 'utf8');
-    allUser = JSON.parse(data);
-    user = allUser.find((user) => user.token == token);
-    user.token = "";
-    fs.writeFileSync("./data/users.json", JSON.stringify(allUser), 'utf8');
-    res.json({"message" : "sa marceh"})
+    // let data = fs.readFileSync('./data/users.json', 'utf8');
+    // allUser = JSON.parse(data);
+    // user = allUser.find((user) => user.token == token);
+    userToken = await UserBDD.findOne({ token: token }).exec();
+    // user.token = "";
+    userToken.token = "";
+    // fs.writeFileSync("./data/users.json", JSON.stringify(allUser), 'utf8');
+    await userToken.save()
+    res.json({ "message": "sa marceh" })
 }
 
 
-module.exports = { RegisterUser, Login, User, UserModif, Logout };
+module.exports = { RegisterUser, Login, User, UserModif, Logout, test };

@@ -5,6 +5,8 @@ const users = require("../modules/user");
 const cards =  require("../modules/cards")
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
+const bdd = require('../db')
+
 /*
 var options = {
   explorer: true,
@@ -46,6 +48,7 @@ app.delete("/disconnect", users.Logout);
 app.get("/card", cards.GetAllCard);
 app.put("/booster", cards.OpenBooster);
 app.post("/convert", cards.Convert);
+app.get('/test', users.test);
 
 // Démarrer le serveur
 app.listen(port, () => {
